@@ -1,6 +1,9 @@
 package util
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -33,4 +36,21 @@ func WriteToFile(fullname string, content string) bool {
 	}
 
 	return true
+}
+
+func JsonFromFile(fileFullName string, v interface{}) error{
+	exists, msg := FilePathExists(fileFullName)
+	if exists == false {
+		fmt.Println("Error when open file:", msg)
+		return errors.New(msg)
+	}
+	stringBytes, error := ioutil.ReadFile(fileFullName)
+
+	if error != nil {
+		fmt.Println("error read file:", error)
+		return error
+	}
+
+	return json.Unmarshal(stringBytes, &v)
+
 }
